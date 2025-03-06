@@ -83,6 +83,7 @@ const Home = () => {
             </div>
           :
         <>
+          <span style={{fontSize: '25px', color: '#16495d', fontWeight: 450}}>Lista de pendientes</span>
           <TextInput
             onChange={onFilter}
             icon={<i className="fa-solid fa-magnifying-glass"></i>}

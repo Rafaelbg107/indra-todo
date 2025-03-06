@@ -17,6 +17,7 @@
 	align-items: center;
 	text-align: left;
 	cursor: pointer;
+	background-color: white;
 }
 
 .todoItem:hover {

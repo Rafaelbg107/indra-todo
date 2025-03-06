@@ -8,6 +8,7 @@
 	width: 20vw;
 	align-self: center;
 	padding: 0px 10px;
+	background-color: white;
 }
 
 .container:focus-within {
