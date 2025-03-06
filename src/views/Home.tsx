@@ -13,6 +13,7 @@ const Home = () => {
 
   const [pageSize, setPageSize] = useState<number>(10)
   const [pageNumber, setPageNumber] = useState<number>(0)
+  const [showCompleted, setShowCompleted] = useState<boolean>(true)
 
   let { 
     data: todoList,
@@ -52,8 +53,16 @@ const Home = () => {
   }
 
   const onNextPage = () => {
-    const filteredList = todoList.filter((item: TodoListObject) => item.title.includes(filter))
+    let filteredList = todoList.filter((item: TodoListObject) => item.title.includes(filter)).filter((item: TodoListObject) => showCompleted ?  true : !item.completed)
     setPageNumber(page => filteredList.length / pageSize > page + 1 ? page + 1 : page)
+  }
+
+  const onShowCompleted = () => {
+    let filteredList = todoList.filter((item: TodoListObject) => item.title.includes(filter)).filter((item: TodoListObject) => !showCompleted ?  true : !item.completed)
+    setShowCompleted(completed => !completed)
+    if (Math.ceil(filteredList.length / pageSize) < pageNumber + 1) {
+      setPageNumber(Math.ceil(filteredList.length / pageSize) - 1)
+    }
   }
 
   return (
@@ -90,9 +99,15 @@ const Home = () => {
             style={{marginBottom: '10px'}}
             placeholder={"Buscar..."}
           />
+
+          <div style={{display: 'flex', alignItems: 'center', justifyContent: 'flex-end'}}>
+            <input type="checkbox" checked={showCompleted} style={{height: '14px', width: '14px'}} onChange={onShowCompleted}/>
+            <span>Mostrar completados</span>
+          </div>
           {
             todoList
             .filter((item: TodoListObject) => item.title.includes(filter))
+            .filter((item: TodoListObject) => showCompleted ?  true : !item.completed)
             .filter((_: TodoListObject, index: number) => numberBetween(index, pageNumber * pageSize, (pageNumber + 1) * pageSize))
             .map((todo: TodoListObject) => (
               <div key={todo.id} className="todoItem" onClick={() => onCheckTodo(todo)}>
@@ -109,8 +124,8 @@ const Home = () => {
           <div style={{display: 'flex', justifyContent: 'center'}}>
             <div style={{display: 'flex', gap: '5px', alignItems: 'center', justifyContent: 'center'}}>
               <i className="fa-solid fa-caret-left" onClick={onPrevPage} style={{fontSize: '20px', cursor: 'pointer', color: pageNumber > 0 ? 'black' : '#999'}}></i>
-              <span>{pageNumber + 1} / {Math.ceil(todoList.filter((item: TodoListObject) => item.title.includes(filter)).length / pageSize)}</span>
-              <i className="fa-solid fa-caret-right" onClick={onNextPage} style={{fontSize: '20px', cursor: 'pointer', color: todoList.filter((item: TodoListObject) => item.title.includes(filter)).length / pageSize > pageNumber + 1 ? 'black' : '#999'}}></i>
+              <span>{pageNumber + 1} / {Math.ceil(todoList.filter((item: TodoListObject) => item.title.includes(filter)).filter((item: TodoListObject) => showCompleted ?  true : !item.completed).length / pageSize)}</span>
+              <i className="fa-solid fa-caret-right" onClick={onNextPage} style={{fontSize: '20px', cursor: 'pointer', color: todoList.filter((item: TodoListObject) => item.title.includes(filter)).filter((item: TodoListObject) => showCompleted ?  true : !item.completed).length / pageSize > pageNumber + 1 ? 'black' : '#999'}}></i>
             </div>
           </div>
         </>
