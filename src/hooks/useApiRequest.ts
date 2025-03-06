@@ -14,7 +14,7 @@ type ApiRequestOptions = {
 
 export const useApiRequest = <T>({ url, method = 'GET', body, headers }: ApiRequestOptions) => {
   const dispatch = useAppDispatch();
-  const { data, isLoading, error, isError } = useAppSelector((state) => state.api);
+  const { data, isLoading, error, errorCode } = useAppSelector((state) => state.api);
 
   useEffect(() => {
 		(async () => {
@@ -41,7 +41,7 @@ export const useApiRequest = <T>({ url, method = 'GET', body, headers }: ApiRequ
 
 			dispatch(successRequest(responseData));
 		} catch (err: any) {
-			dispatch(errorRequest(err.message));
+			dispatch(errorRequest({error: err.message, errorCode: err.status}));
 		}
 	};
 
@@ -49,5 +49,5 @@ export const useApiRequest = <T>({ url, method = 'GET', body, headers }: ApiRequ
 		dispatch(setData(newData))
 	}
 
-  return { data, isLoading, error, isError, setNewData };
+  return { data, isLoading, error, errorCode, setNewData };
 };

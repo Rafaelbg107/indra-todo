@@ -4,14 +4,14 @@ interface ApiState<T> {
 	data: T | null
 	isLoading: boolean
 	error: string | null
-	isError: boolean
+	errorCode: number | null
 }
 
 const initialState: ApiState<any> = {
 	data: [],
 	isLoading: false,
 	error: null,
-	isError: false
+	errorCode: null
 }
 
 export const apiSlice = createSlice({
@@ -20,19 +20,19 @@ export const apiSlice = createSlice({
 	reducers: {
 		makeRequest: (state) => {
 			state.isLoading = true,
-			state.isError = false,
+			state.errorCode = null,
 			state.error = null
 		},
 		successRequest: <T>(state: ApiState<T>, action: PayloadAction<T>) => {
 			state.isLoading = false,
 			state.data = action.payload,
 			state.error = null,
-			state.isError = false
+			state.errorCode = null
 		},
-		errorRequest: (state, action: PayloadAction<string>) => {
+		errorRequest: (state, action: PayloadAction<{error: string, errorCode: number}>) => {
 			state.isLoading = false,
-			state.error = action.payload,
-			state.isError = true
+			state.error = action.payload.error,
+			state.errorCode = action.payload.errorCode
 		},
 		setData: <T>(state: ApiState<T>, action: PayloadAction<T>) => {
 			state.data = action.payload
